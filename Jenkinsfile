@@ -11,7 +11,7 @@ pipeline {
     gitBranch = 'feature/Jenkinsfile'
     gitCredentialsId = '92df16ef-1ebd-4d46-bd70-09927dbb5f43'
     gitVersionProperties = null
-    nunit = null
+    nunit = true
   }
   
   options {
@@ -83,13 +83,6 @@ pipeline {
       }
       
       post {
-        success {
-          steps {
-            script {
-              nunit = true
-            }
-          }
-        }
         failure {
           steps {
             script {
