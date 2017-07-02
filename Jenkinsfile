@@ -8,7 +8,7 @@ pipeline {
   
   environment {
     gitUrl = 'git@github.com:chanahl/ProjectEuler.git'
-    gitBranch = 'feature/Jenkinsfile'
+    gitBranch = 'develop'
     gitCredentialsId = '92df16ef-1ebd-4d46-bd70-09927dbb5f43'
     gitVersionProperties = null
     nunit = true
