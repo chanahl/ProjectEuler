@@ -126,13 +126,12 @@ pipeline {
         script {
           def sonarQubeParameters = sprintf(
             '/k:%1$s /n:%2$s /v:%3$s /d:sonar.host.url=%4$s',
-              [
-                _gitRepositoryName + "-" + gitVersionProperties.GitVersion_PreReleaseLabel,
-                _gitRepositoryName + "-" + gitVersionProperties.GitVersion_BranchName.replaceAll('/', '-'),
-                gitVersionProperties.GitVersion_SemVer,
-                _sonarHostUrl
-              ])
-              
+            [
+              _gitRepositoryName + "-" + gitVersionProperties.GitVersion_PreReleaseLabel,
+              _gitRepositoryName + "-" + gitVersionProperties.GitVersion_BranchName.replaceAll('/', '-'),
+              gitVersionProperties.GitVersion_SemVer,
+              _sonarHostUrl
+            ])
           bat "${tool name: 'sonar-scanner-msbuild-3.0.0.629', type: 'hudson.plugins.sonar.MsBuildSQRunnerInstallation'} begin ${sonarQubeParameters}"
         }
       }
@@ -140,7 +139,16 @@ pipeline {
     
     stage("Build") {
       steps {
-        bat "${tool name: 'msbuild-14.0', type: 'msbuild'} ProjectEuler\\ProjectEuler.sln /p:Configuration=\"${config}\" /p:Platform=\"Any CPU\""
+        script {
+          def msbuildParameters = sprintf(
+            '%1$s /p:Configuration="%2$s" /p:Platform="%3$s"',
+            [
+              "ProjectEuler\\ProjectEuler.sln",
+              config,
+              "Any CPU"
+            ])
+          bat "${tool name: 'msbuild-14.0', type: 'msbuild'} ${msbuildParameters}"
+        }
       }
       post {
         failure {
@@ -219,12 +227,16 @@ pipeline {
       }
       steps {
         script {
-          dir(nunitDirectory) {
-            bat """
-                ${tool name: 'nunit3-console-3.6.1', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'} -config=\"${config}\" --result=\"${nunitDirectory}\\ProjectEuler.Test-nunit-result.xml\"
-                EXIT /B 0
-                """
-          }
+          def nunitParameters = sprintf(
+            '%1$s --config="%2$s" --result="%3$s"',
+            [
+              "ProjectEuler\\ProjectEuler.Test\\bin\\Debug\\ProjectEuler.Test.dll",
+              config,
+              "${nunitDirectory}\\ProjectEuler.Test-nunit-result.xml"
+            ])
+          bat """MD %nunitDirectory%
+            ${tool name: 'nunit3-console-3.6.1', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'} ${nunitParameters}
+            EXIT /B 0"""
         }
         post {
           failure {
