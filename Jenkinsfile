@@ -83,9 +83,11 @@ pipeline {
       steps {
         deleteDir()
         
-        def isFutureBranch = BRANCH_NAME.contains('/')
-        branch = isFutureBranch ? BRANCH_NAME.split('/')[0] : BRANCH_NAME
-        config = _configuration[branch] ? _configuration[branch] : 'Debug'
+        script {
+          def isFutureBranch = BRANCH_NAME.contains('/')
+          branch = isFutureBranch ? BRANCH_NAME.split('/')[0] : BRANCH_NAME
+          config = _configuration[branch] ? _configuration[branch] : 'Debug'
+        }
       }
     }
     
@@ -228,7 +230,9 @@ pipeline {
         }
         post {
           failure {
-            currentBuild.result = 'UNSTABLE'
+            script {
+              currentBuild.result = 'UNSTABLE'
+            }
           }
           success {
             step([
