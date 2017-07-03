@@ -140,9 +140,7 @@ pipeline {
     
     stage("Build") {
       steps {
-        script {
-          bat "${tool name: 'msbuild-14.0', type: 'msbuild'} ProjectEuler\\ProjectEuler.sln /p:Configuration=\"${config}\" /p:Platform=\"Any CPU\""
-        }
+        bat "${tool name: 'msbuild-14.0', type: 'msbuild'} ProjectEuler\\ProjectEuler.sln /p:Configuration=\"${config}\" /p:Platform=\"Any CPU\""
       }
       post {
         failure {
