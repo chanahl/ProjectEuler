@@ -64,8 +64,8 @@ pipeline {
     config = null
     gitVersionProperties = null
     nunit = null
-    nupkgsDirectory = '.nupkgs'
     nunitDirectory = '.nunit-result'
+    nupkgsDirectory = '.nupkgs'
   }
   
   options {
@@ -240,8 +240,10 @@ pipeline {
         }
         post {
           failure {
-            script {
-              currentBuild.result = 'UNSTABLE'
+            steps {
+              script {
+                currentBuild.result = 'UNSTABLE'
+              }
             }
           }
           success {
