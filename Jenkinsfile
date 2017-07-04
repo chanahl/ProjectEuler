@@ -304,46 +304,36 @@ pipeline {
     // aborted {
     // }
     failure {
-      when {
-        expression { BRANCH_NAME ==~ /(develop|master)/ }
-      }
-      steps {
-        emailext (
-          attachLog: true,
-          body: """
-            <b>Result:</b> FAILURE
-            <br><br>
-            <b>Version:</b> ${gitVersionProperties.GitVersion_SemVer}
-            <br><br>
-            Check console output at ${BUILD_URL} to view the results.
-            <br>""",
-          mimeType: 'text/html',
-          recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider']],
-          subject: '[JENKINS]: ${PROJECT_NAME}',
-          to: 'hlc.alex@gmail.com'
-        )
-      }
+      emailext (
+        attachLog: true,
+        body: """
+          <b>Result:</b> FAILURE
+          <br><br>
+          <b>Version:</b> ${gitVersionProperties.GitVersion_SemVer}
+          <br><br>
+          Check console output at ${BUILD_URL} to view the results.
+          <br>""",
+        mimeType: 'text/html',
+        recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider']],
+        subject: '[JENKINS]: ${PROJECT_NAME}',
+        to: 'hlc.alex@gmail.com'
+      )
     }
     success {
-      when {
-        expression { BRANCH_NAME ==~ /(develop|master)/ }
-      }
-      steps {
-        emailext (
-          attachLog: true,
-          body: """
-            <b>Result:</b> SUCCESS
-            <br><br>
-            <b>Version:</b> ${gitVersionProperties.GitVersion_SemVer}
-            <br><br>
-            Check console output at ${BUILD_URL} to view the results.
-            <br>""",
-          mimeType: 'text/html',
-          recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider']],
-          subject: '[JENKINS]: ${PROJECT_NAME}',
-          to: 'hlc.alex@gmail.com'
-        )
-      }
+      emailext (
+        attachLog: true,
+        body: """
+          <b>Result:</b> SUCCESS
+          <br><br>
+          <b>Version:</b> ${gitVersionProperties.GitVersion_SemVer}
+          <br><br>
+          Check console output at ${BUILD_URL} to view the results.
+          <br>""",
+        mimeType: 'text/html',
+        recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider']],
+        subject: '[JENKINS]: ${PROJECT_NAME}',
+        to: 'hlc.alex@gmail.com'
+      )
     }
     // unstable {
     // }
