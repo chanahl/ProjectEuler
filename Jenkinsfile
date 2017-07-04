@@ -178,7 +178,7 @@ pipeline {
       }
     }
     
-    stage('Pack') {
+    stage('Nexus') {
       when {
         environment name: 'currentBuild.result', value: ''
       }
@@ -197,22 +197,18 @@ pipeline {
           }
         }
       }
-    }
-    
-    stage('Deploy') {
-      when {
-        environment name: 'currentBuild.result', value: ''
-      }
-      steps {
-        script {
-          dir(nupkgsDirectory) {
-            def credentialsId = _nexus[branch] ? _nexus[branch]['credentialsId'] : ''
-            def url = _nexus[branch] ? _nexus[branch]['url'] : ''
-            withCredentials([
-              string(
-                credentialsId: credentialsId,
-                variable: 'apiKey')]) {
-              bat "${tool name: 'nuget-4.1.0', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'} push *.symbols.nupkg ${apiKey} -Source ${url}"
+      post {
+        success {
+          script {
+            dir(nupkgsDirectory) {
+              def credentialsId = _nexus[branch] ? _nexus[branch]['credentialsId'] : ''
+              def url = _nexus[branch] ? _nexus[branch]['url'] : ''
+              withCredentials([
+                string(
+                  credentialsId: credentialsId,
+                  variable: 'apiKey')]) {
+                bat "${tool name: 'nuget-4.1.0', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'} push *.symbols.nupkg ${apiKey} -Source ${url}"
+              }
             }
           }
         }
