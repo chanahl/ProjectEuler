@@ -243,8 +243,7 @@ pipeline {
             }
           }
           success {
-            nunit
-              testResultsPattern: "**/${nunitDirectory}/ProjectEuler.Test-nunit-result.xml",
+            nunit testResultsPattern: "**/${nunitDirectory}/ProjectEuler.Test-nunit-result.xml",
               debug: false,
               keepJUnitReports: true,
               skipJUnitArchiver: false,
