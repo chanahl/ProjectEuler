@@ -23,7 +23,7 @@ def _customWorkspace = 'D:\\.ws\\ci'
 // String: Git repository name.
 def _gitRepositoryName = 'ProjectEuler'
 
-// Map[GitFlow Branch : [Jenkins CredentialsId (API Key), Nexus URL ]].
+// Map[GitFlow Branch : [Jenkins Credentials ID (API Key), Nexus URL ]].
 def _nexus = [
   develop : [
     credentialsId : '383c6d87-4ad7-405f-a4c3-3029c76c2818',
@@ -62,9 +62,9 @@ pipeline {
   environment {
     branch = null
     config = null
+    doNUnit = null
     gitVersionProperties = null
     msbuildParameters = null
-    nunit = null
     nunitDirectory = '.nunit-result'
     nupkgsDirectory = '.nupkgs'
   }
@@ -156,12 +156,12 @@ pipeline {
         failure {
           script {
             currentBuild.result = 'FAILURE'
-            nunit = false
+            doNUnit = false
           }
         }
         success {
           script {
-            nunit = true
+            doNUnit = true
           }
         }
       }
@@ -221,16 +221,16 @@ pipeline {
     
     stage('NUnit') {
       when {
-        expression { return nunit }
+        expression { return doNUnit }
       }
       steps {
         script {
           def nunitParameters = sprintf(
             '%1$s --config="%2$s" --result="%3$s"',
             [
-              "ProjectEuler\\ProjectEuler.Test\\bin\\Debug\\ProjectEuler.Test.dll",
+              "ProjectEuler\\ProjectEuler.Test\\bin\\${config}\\ProjectEuler.Test.dll",
               config,
-              "${nunitDirectory}\\ProjectEuler.Test.nunit-result.xml"
+              "${nunitDirectory}\\ProjectEuler.Test.xml"
             ])
           bat """MD %nunitDirectory%
             ${tool name: 'nunit3-console-3.6.1', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'} ${nunitParameters}
@@ -244,18 +244,11 @@ pipeline {
           }
         }
         success {
-          nunit testResultsPattern: "**/${nunitDirectory}/ProjectEuler.Test.nunit-result.xml",
+          nunit testResultsPattern: "**/${nunitDirectory}/ProjectEuler.Test.xml",
             debug: false,
             keepJUnitReports: true,
             skipJUnitArchiver: false,
             failIfNoResults: false
-          // step([
-            // $class: 'NUnitPublisher',
-            // testResultsPattern: "**/${nunitDirectory}/ProjectEuler.Test.nunit-result.xml",
-            // debug: false,
-            // keepJUnitReports: true,
-            // skipJUnitArchiver: false,
-            // failIfNoResults: false])
         }
       }
     }
