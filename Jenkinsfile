@@ -63,6 +63,7 @@ pipeline {
     branch = null
     config = null
     gitVersionProperties = null
+    msbuildParameters = null
     nunit = null
     nunitDirectory = '.nunit-result'
     nupkgsDirectory = '.nupkgs'
@@ -82,11 +83,19 @@ pipeline {
     stage('Initialize') {
       steps {
         deleteDir()
-        
         script {
           def isFutureBranch = BRANCH_NAME.contains('/')
           branch = isFutureBranch ? BRANCH_NAME.split('/')[0] : BRANCH_NAME
+          
           config = _configuration[branch] ? _configuration[branch] : 'Debug'
+          
+          msbuildParameters = sprintf(
+            '%1$s /p:Configuration="%2$s" /p:Platform="%3$s"',
+            [
+              "ProjectEuler\\ProjectEuler.sln",
+              config,
+              "Any CPU"
+            ])
         }
       }
     }
@@ -140,13 +149,6 @@ pipeline {
     stage("Build") {
       steps {
         script {
-          def msbuildParameters = sprintf(
-            '%1$s /p:Configuration="%2$s" /p:Platform="%3$s"',
-            [
-              "ProjectEuler\\ProjectEuler.sln",
-              config,
-              "Any CPU"
-            ])
           bat "${tool name: 'msbuild-14.0', type: 'msbuild'} ${msbuildParameters}"
         }
       }
@@ -305,39 +307,43 @@ pipeline {
       when {
         expression { BRANCH_NAME ==~ /(develop|master)/ }
       }
-      emailext (
-        attachLog: true,
-        body: """
-          <b>Result:</b> FAILURE
-          <br><br>
-          <b>Version:</b> ${gitVersionProperties.GitVersion_SemVer}
-          <br><br>
-          Check console output at ${BUILD_URL} to view the results.
-          <br>""",
-        mimeType: 'text/html',
-        recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider']],
-        subject: '[JENKINS]: ${PROJECT_NAME}',
-        to: 'hlc.alex@gmail.com'
-      )
+      steps {
+        emailext (
+          attachLog: true,
+          body: """
+            <b>Result:</b> FAILURE
+            <br><br>
+            <b>Version:</b> ${gitVersionProperties.GitVersion_SemVer}
+            <br><br>
+            Check console output at ${BUILD_URL} to view the results.
+            <br>""",
+          mimeType: 'text/html',
+          recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider']],
+          subject: '[JENKINS]: ${PROJECT_NAME}',
+          to: 'hlc.alex@gmail.com'
+        )
+      }
     }
     success {
       when {
         expression { BRANCH_NAME ==~ /(develop|master)/ }
       }
-      emailext (
-        attachLog: true,
-        body: """
-          <b>Result:</b> SUCCESS
-          <br><br>
-          <b>Version:</b> ${gitVersionProperties.GitVersion_SemVer}
-          <br><br>
-          Check console output at ${BUILD_URL} to view the results.
-          <br>""",
-        mimeType: 'text/html',
-        recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider']],
-        subject: '[JENKINS]: ${PROJECT_NAME}',
-        to: 'hlc.alex@gmail.com'
-      )
+      steps {
+        emailext (
+          attachLog: true,
+          body: """
+            <b>Result:</b> SUCCESS
+            <br><br>
+            <b>Version:</b> ${gitVersionProperties.GitVersion_SemVer}
+            <br><br>
+            Check console output at ${BUILD_URL} to view the results.
+            <br>""",
+          mimeType: 'text/html',
+          recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider']],
+          subject: '[JENKINS]: ${PROJECT_NAME}',
+          to: 'hlc.alex@gmail.com'
+        )
+      }
     }
     // unstable {
     // }
