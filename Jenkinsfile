@@ -154,18 +154,14 @@ pipeline {
       }
       post {
         failure {
-          steps {
-            script {
-              currentBuild.result = 'FAILURE'
-              nunit = false
-            }
+          script {
+            currentBuild.result = 'FAILURE'
+            nunit = false
           }
         }
         success {
-          steps {
-            script {
-              nunit = true
-            }
+          script {
+            nunit = true
           }
         }
       }
