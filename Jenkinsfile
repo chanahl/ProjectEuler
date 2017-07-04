@@ -236,14 +236,18 @@ pipeline {
             ${tool name: 'nunit3-console-3.6.1', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'} ${nunitParameters}
             EXIT /B 0"""
         }
+        step([
+          $class: 'NUnitPublisher',
+          testResultsPattern: '**/.nunit-result/ProjectEuler.Test-nunit-result.xml',
+          debug: false,
+          keepJUnitReports: true,
+          skipJUnitArchiver: false,
+          failIfNoResults: false])
         post {
           failure {
             script {
               currentBuild.result = 'UNSTABLE'
             }
-          }
-          success {
-            nunit testResultsPattern: "**/${nunitDirectory}/ProjectEuler.Test-nunit-result.xml", failIfNoResults: false
           }
         }
       }
