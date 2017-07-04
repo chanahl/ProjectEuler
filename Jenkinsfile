@@ -186,7 +186,7 @@ pipeline {
         script {
           for (csProject in _csProjects) {
             def packParameters = sprintf(
-              '%1$s -Output %2$s -Properties Configuration="%3$s" -Symbols -IncludeReferencedProjects -Version %4$s',
+              '%1$s -Output %2$s -Properties Configuration="%3$s" -Symbols -IncludeReferencedProjects -Tool -Version %4$s',
               [
                 csProject,
                 nupkgsDirectory,
