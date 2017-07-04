@@ -243,13 +243,7 @@ pipeline {
             }
           }
           success {
-            script {
-              nunit testResultsPattern: "**/${nunitDirectory}/ProjectEuler.Test-nunit-result.xml",
-                debug: false,
-                keepJUnitReports: true,
-                skipJUnitArchiver: false,
-                failIfNoResults: false
-            }
+            nunit testResultsPattern: "**/${nunitDirectory}/ProjectEuler.Test-nunit-result.xml", failIfNoResults: false
           }
         }
       }
