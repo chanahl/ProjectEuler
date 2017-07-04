@@ -244,13 +244,18 @@ pipeline {
           }
         }
         success {
-          step([
-            $class: 'NUnitPublisher',
-            testResultsPattern: "**/${nunitDirectory}/ProjectEuler.Test.nunit-result.xml",
+          nunit testResultsPattern: "**/${nunitDirectory}/ProjectEuler.Test.nunit-result.xml",
             debug: false,
             keepJUnitReports: true,
             skipJUnitArchiver: false,
-            failIfNoResults: false])
+            failIfNoResults: false
+          // step([
+            // $class: 'NUnitPublisher',
+            // testResultsPattern: "**/${nunitDirectory}/ProjectEuler.Test.nunit-result.xml",
+            // debug: false,
+            // keepJUnitReports: true,
+            // skipJUnitArchiver: false,
+            // failIfNoResults: false])
         }
       }
     }
