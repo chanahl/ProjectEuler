@@ -230,7 +230,7 @@ pipeline {
             [
               "ProjectEuler\\ProjectEuler.Test\\bin\\Debug\\ProjectEuler.Test.dll",
               config,
-              "${nunitDirectory}\\ProjectEuler.Test-nunit-result.xml"
+              "${nunitDirectory}\\ProjectEuler.Test.nunit-result.xml"
             ])
           bat """MD %nunitDirectory%
             ${tool name: 'nunit3-console-3.6.1', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'} ${nunitParameters}
@@ -246,7 +246,7 @@ pipeline {
         success {
           step([
             $class: 'NUnitPublisher',
-            testResultsPattern: '**/${nunitDirectory}/ProjectEuler.Test-nunit-result.xml',
+            testResultsPattern: "**/${nunitDirectory}/ProjectEuler.Test.nunit-result.xml",
             debug: false,
             keepJUnitReports: true,
             skipJUnitArchiver: false,
