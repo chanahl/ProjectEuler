@@ -64,13 +64,11 @@ namespace ProjectEuler.Problems
                     }
 
                     // Palindrome found.
-                    if (number != reverse)
+                    if (number == reverse)
                     {
-                        continue;
+                        _largestPalindromeProduct = number;
+                        break;
                     }
-
-                    _largestPalindromeProduct = number;
-                    break;
                 }
 
                 if (_largestPalindromeProduct > 0)
