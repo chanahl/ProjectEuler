@@ -37,20 +37,19 @@ namespace ProjectEuler.Mathematics
         {
             while (true)
             {
-                if (pair.First >= 0 && pair.Second >= 0)
+                if (pair.First < 0 || pair.Second < 0)
                 {
-                    if (pair.Second == 0)
-                    {
-                        return pair.First;
-                    }
-
-                    var temporary = pair.First;
-                    pair.First = pair.Second;
-                    pair.Second = temporary % pair.Second;
                     continue;
                 }
 
-                return 0;
+                if (pair.Second == 0)
+                {
+                    return pair.First;
+                }
+
+                var temporary = pair.First;
+                pair.First = pair.Second;
+                pair.Second = temporary % pair.Second;
             }
         }
 
