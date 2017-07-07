@@ -27,19 +27,24 @@ def _gitRepositoryName = 'ProjectEuler'
 def _nexus = [
         develop: [
                 id : '383c6d87-4ad7-405f-a4c3-3029c76c2818',
-                url: 'http://desktop-nns09r8:8081/repository/nuget-private-develop/'],
+                url: 'http://desktop-nns09r8:8081/repository/nuget-private-develop/'
+        ],
         feature: [
                 id : '383c6d87-4ad7-405f-a4c3-3029c76c2818',
-                url: 'http://desktop-nns09r8:8081/repository/nuget-private-feature/'],
+                url: 'http://desktop-nns09r8:8081/repository/nuget-private-feature/'
+        ],
         release: [
                 id : 'de4641c2-8352-40d9-8eae-fa1934f3cafc',
-                url: 'http://desktop-nns09r8:8081/repository/nuget-private-release/'],
+                url: 'http://desktop-nns09r8:8081/repository/nuget-private-release/'
+        ],
         hotfix : [
                 id : 'de4641c2-8352-40d9-8eae-fa1934f3cafc',
-                url: 'http://desktop-nns09r8:8081/repository/nuget-private-hotfix/'],
+                url: 'http://desktop-nns09r8:8081/repository/nuget-private-hotfix/'
+        ],
         master : [
                 id : 'de4641c2-8352-40d9-8eae-fa1934f3cafc',
-                url: 'http://desktop-nns09r8:8081/repository/nuget-private-master/']
+                url: 'http://desktop-nns09r8:8081/repository/nuget-private-master/'
+        ]
 ]
 
 // String: NuGet.config
@@ -62,7 +67,8 @@ pipeline {
     environment {
         branch = null
         config = null
-        doNUnit = null
+        doStageDeploy = null
+        doStageNUnit = null
         gitVersionProperties = null
         msbuildParameters = null
         nunitDirectory = '.nunit-result'
@@ -88,6 +94,8 @@ pipeline {
                     branch = isFutureBranch ? BRANCH_NAME.split('/')[0] : BRANCH_NAME
 
                     config = _configuration[branch] ? _configuration[branch] : 'Debug'
+
+                    doStageDeploy = _csProjects.empty ? false : true
 
                     msbuildParameters = sprintf(
                             '%1$s /p:Configuration="%2$s" /p:Platform="%3$s"',
@@ -154,12 +162,12 @@ pipeline {
                 failure {
                     script {
                         currentBuild.result = 'FAILURE'
-                        doNUnit = false
+                        doStageNUnit = false
                     }
                 }
                 success {
                     script {
-                        doNUnit = true
+                        doStageNUnit = true
                     }
                 }
             }
@@ -174,10 +182,10 @@ pipeline {
             }
         }
 
-        stage('Nexus') {
+        stage('Deploy') {
             when {
                 environment name: 'currentBuild.result', value: ''
-                expression { return _csProjects }
+                expression { return doStageDeploy }
             }
             steps {
                 script {
@@ -211,7 +219,7 @@ pipeline {
 
         stage('NUnit') {
             when {
-                expression { return doNUnit }
+                expression { return doStageNUnit }
             }
             steps {
                 script {
