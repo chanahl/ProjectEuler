@@ -70,11 +70,16 @@ namespace ProjectEuler.Problems
                     }
 
                     _largestPalindromeProduct = number;
-                    return _largestPalindromeProduct;
+                    break;
+                }
+
+                if (_largestPalindromeProduct > 0)
+                {
+                    break;
                 }
             }
 
-            return null;
+            return _largestPalindromeProduct;
         }
 
         protected override void LogResult()
