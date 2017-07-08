@@ -35,11 +35,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Framework.Core, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Common.Framework.Core.0.1.0-alpha.263\lib\net462\Common.Framework.Core.dll</HintPath>
+      <HintPath>packages\Common.Framework.Core.0.1.0-alpha.273\lib\net462\Common.Framework.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Common.Framework.Data, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Common.Framework.Data.0.1.0-alpha.263\lib\net462\Common.Framework.Data.dll</HintPath>
+      <HintPath>packages\Common.Framework.Data.0.1.0-alpha.273\lib\net462\Common.Framework.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
