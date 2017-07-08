@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Common.Framework.Core.Collections.Custom;
 using Common.Framework.Core.Extensions;
 using Common.Framework.Core.Logging;
@@ -65,29 +66,32 @@ namespace ProjectEuler.Problems
         {
             var sumOfMultiples = _multiples.Sum();
             var numDivisors = Divisors.Count;
-            ResultMessage = "The sum of all the multiples of [";
+            var resultMessage = new StringBuilder();
+            resultMessage.Append("The sum of all the multiples of [");
             for (var i = 0; i < numDivisors; i++)
             {
                 if (i == 0)
                 {
-                    ResultMessage += Divisors[i];
+                    resultMessage.Append(Divisors[i]);
                     continue;
                 }
 
                 if (numDivisors == 2 || i == (numDivisors - 1))
                 {
-                    ResultMessage += "] or [";
+                    resultMessage.Append("] or [");
                 }
                 else
                 {
-                    ResultMessage += ", ";
+                    resultMessage.Append(", ");
                 }
 
-                ResultMessage += Divisors[i];
+                resultMessage.Append(Divisors[i]);
             }
+            
+            resultMessage.Append("] below [" + Target + "] is [" + sumOfMultiples + "].");
+            LogManager.Instance().LogResultMessage(resultMessage.ToString());
 
-            ResultMessage += "] below [" + Target + "] is [" + sumOfMultiples + "].";
-            LogManager.Instance().LogResultMessage(ResultMessage);
+            ResultMessage = resultMessage.ToString();
         }
     }
 }
