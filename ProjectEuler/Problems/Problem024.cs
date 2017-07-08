@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Common.Framework.Core.Extensions;
 using Common.Framework.Core.Logging;
 using ProjectEuler.Mathematics;
@@ -52,7 +53,7 @@ namespace ProjectEuler.Problems
 
         public override dynamic Solve()
         {
-            var digitCount = Digits.Count();
+            var digitCount = Digits.Count;
             var numbers = Digits;
             var remainingPermutations = LexicographicPermutation - 1;
 
@@ -67,6 +68,7 @@ namespace ProjectEuler.Problems
              * we remove it from the list and continue until we exhaust the number of
              * permutations leading up to the desired lexicographic permutation.
              */
+            var lexicographicPermutation = new StringBuilder();
             for (var i = 1; i < digitCount; i++)
             {
                 // index of number in ordered digits
@@ -76,7 +78,7 @@ namespace ProjectEuler.Problems
                 remainingPermutations = (int)(remainingPermutations % (digitCount - i).CalculateFactorial());
 
                 // append number from digits list
-                _lexicographicPermutation += numbers.ElementAt((int)index);
+                lexicographicPermutation.Append(numbers.ElementAt((int)index));
 
                 // remove appended number from digits list
                 numbers.RemoveAt((int)index);
@@ -91,9 +93,10 @@ namespace ProjectEuler.Problems
             // append the remaining numbers in digits list that did not contribute
             for (var i = 0; i < numbers.Count; i++)
             {
-                _lexicographicPermutation += numbers.ElementAt(i);
+                lexicographicPermutation.Append(numbers.ElementAt(i));
             }
 
+            _lexicographicPermutation = lexicographicPermutation.ToString();
             return _lexicographicPermutation;
         }
 
