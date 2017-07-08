@@ -54,11 +54,7 @@ namespace ProjectEuler.Problems
             var fmp2 = 1;
             while (fn < Limit)
             {
-                if (remainder == -1)
-                {
-                    _fibonnaciSum += fn;
-                }
-                else if (fn % parityValue == remainder)
+                if (remainder == -1 || fn % parityValue == remainder)
                 {
                     _fibonnaciSum += fn;
                 }
