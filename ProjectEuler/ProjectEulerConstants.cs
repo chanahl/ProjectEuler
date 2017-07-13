@@ -6,7 +6,7 @@
 
 namespace ProjectEuler
 {
-    internal class ProjectEulerConstants
+    internal static class ProjectEulerConstants
     {
         public const string ProjectEulersProblemsKey = "ProjectEulerProblems";
 

@@ -92,7 +92,7 @@ namespace ProjectEuler.Problems
                 "] term in the Fibonacci sequence to contain [" +
                 Digits +
                 "] digits is [" +
-                _fibonnaciNumbers.Count() +
+                _fibonnaciNumbers.Count +
                 "].";
             LogManager.Instance().LogResultMessage(ResultMessage);
         }
